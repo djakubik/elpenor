@@ -106,6 +106,7 @@ public class Silnik
 		}
 
 		List<Kodek> ks = new LinkedList<Kodek>();
+		int rozm_we, rozm_wy;
 
 		try
 		{
@@ -132,9 +133,9 @@ public class Silnik
 				System.out.printf("Kodek: %s\n", k0.nazwa());
 			}
 
-			int rozm_we = md.pobierz_wartosc();
+			rozm_we = md.pobierz_wartosc();
 			System.out.printf("rozm_we=%d%n", rozm_we);
-			int rozm_wy = md.pobierz_wartosc();
+			rozm_wy = md.pobierz_wartosc();
 			System.out.printf("rozm_wy=%d%n", rozm_wy);
 		}
 		catch (ArrayIndexOutOfBoundsException e)
@@ -142,6 +143,6 @@ public class Silnik
 			return null;
 		}
 		
-		return new DaneSkompresowane(fin, ks, md);
+		return new DaneSkompresowane(fin, ks, md, rozm_we, rozm_wy);
 	}
 }
