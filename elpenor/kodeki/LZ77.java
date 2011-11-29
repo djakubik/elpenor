@@ -82,17 +82,8 @@ public class LZ77 extends Kodek {
         int iloscB = 0;
 
         long czas = 0;
-
         long czasA = 0;
-        long czasB = 0;
-        long czasC = 0;
-        long czasD = 0;
-
         long tCzasA;
-        long tCzasB;
-        long tCzasC;
-        long tCzasD;
-
 
         BitMaster bitMaster = new BitMaster(LZ77_SŁOWNIK, LZ77_WZORZEC, (int)(1.8*iloscDanych));
         Duet duet;

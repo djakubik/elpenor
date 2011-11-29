@@ -324,36 +324,13 @@ public class PanelDekompresji extends PanelElpenor {
 
                 if (ds != null) {
 
-                    Metadane md = ds.podajMetadane();
-
                     List<Kodek> kodeki = ds.podajKodeki();
-
-                    for (Kodek k : kodeki) {
-                        System.out.println(k.id() + " " + k.nazwa());
-
-
-                        Map<String, Integer> parametr = new TreeMap<String, Integer>();
-
-                        for (Iterator it = k.parametry().iterator(); it.hasNext();) {
-
-                            Parametr p = (Parametr) it.next();
-
-                            int w = md.pobierz_wartosc();
-                            md.dodajWartosc(w);
-
-                            parametr.put(p.nazwa(), w);
-                            System.out.println(p.nazwa() + "--" + w);
-                        }
-
-                        parametry.add(parametr);
-                    }
 
                     ustawKodeki(kodeki, listaDostepnych);
                     
-                    
                     int n = polePliku1.getText().lastIndexOf('/');
                     String nazwa = polePliku1.getText().substring(++n);
-                    szczegolyPliku.wstawDane(nazwa,1455, 1300);
+                    szczegolyPliku.wstawDane(nazwa,ds.podajRozmiarWejsciowy(), ds.podajRozmiarWyjsciowy());
 
                 } else szczegolyPliku.wyczyscDane();
             }
