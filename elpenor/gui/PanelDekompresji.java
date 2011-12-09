@@ -6,8 +6,6 @@ package elpenor.gui;
 
 import elpenor.szkielet.DaneSkompresowane;
 import elpenor.szkielet.Kodek;
-import elpenor.szkielet.Kodek.Parametr;
-import elpenor.szkielet.Metadane;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -16,10 +14,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -62,7 +58,7 @@ public class PanelDekompresji extends PanelElpenor {
 
         listaDostepnych = new ListaModulow("Użyte moduły");
 
-        panelInfo = new PanelInfo("Informacje o module", new PrzyciskX("Pokaż konfigurację", "pokazuje_konfiguracje_parametrów", "Otwiera okno konfiguracyjne wybranego kodeka"), "informacje");
+        panelInfo = new PanelInfo("Informacje o module", null, "informacje");
 
         JPanel panelPrzyciskow = new JPanel();
         panelPrzyciskow.setLayout(new GridBagLayout());
@@ -140,7 +136,7 @@ public class PanelDekompresji extends PanelElpenor {
         wybor2 = new PrzyciskX("Wybierz", "wybierz_plik_wyjściowy", "Kliknij, aby wybrać plik wyjściowy");
 
 
-        dzialaj = new PrzyciskX("Dekompresuj", "wykonaj_dekompresję", "Wybierz plik, następnie wykonaj dekompresję wybranego pliku");
+        dzialaj = new PrzyciskX("Dekompresuj", "wykonaj_dekompresję", "Wykonuje dekompresję wybranego pliku");
         wybierzPlik = new PrzyciskX("Wczytaj dane", "wybierz_plik", "Wczytuje metadane pliku i przygotowuje do dekompresji");
         aktualizujDzialaj();
 
@@ -190,17 +186,6 @@ public class PanelDekompresji extends PanelElpenor {
 
         /*
          * Koniec ustawień okna
-         * Ustawianie parametrów
-         */
-
-        /*
-         * Koniec ustawień parametrów
-         * Metody okna
-         */
-
-
-        /*
-         * Koniec metod
          * Obsługa zdarzeń
          */
 
@@ -218,27 +203,13 @@ public class PanelDekompresji extends PanelElpenor {
             }
         });
 
-        panelInfo.podajPrzycisk().addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent ae) {
-                int wybrany = listaDostepnych.lista.getSelectedIndex();
-                if (wybrany >= 0) {
-                    //new OknoParametrow(okno, listaWybranych.listaModulow.get(wybrany), mapy.get(wybrany));
-
-                    OknoParametrow ok = new OknoParametrow(okno, true);
-                    ok.ustawEdytowalnosc(false);
-                    ok.ustawienia(listaDostepnych.listaModulow.get(wybrany), parametry.get(wybrany));
-                }
-            }
-        });
-
         wybor1.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
 
                 JFileChooser ladowaczPlikow = new JFileChooser();
 
-                int r = ladowaczPlikow.showOpenDialog(PanelDekompresji.this);
+                int r = ladowaczPlikow.showDialog(PanelDekompresji.this,"Wybierz");
 
                 if (r == JFileChooser.APPROVE_OPTION) {
                     File s = ladowaczPlikow.getSelectedFile();
@@ -254,7 +225,7 @@ public class PanelDekompresji extends PanelElpenor {
 
                 JFileChooser zapisywaczPlikow = new JFileChooser();
 
-                int r = zapisywaczPlikow.showSaveDialog(PanelDekompresji.this);
+                int r = zapisywaczPlikow.showDialog(PanelDekompresji.this,"Wybierz");
 
                 if (r == JFileChooser.APPROVE_OPTION) {
                     File s = zapisywaczPlikow.getSelectedFile();
@@ -321,6 +292,7 @@ public class PanelDekompresji extends PanelElpenor {
 
                 wyczyscKodeki(listaDostepnych);
                 parametry.clear();
+                aktualizujDzialaj();
 
                 if (ds != null) {
 
