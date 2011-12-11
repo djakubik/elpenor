@@ -22,6 +22,8 @@ public class OAutorach extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         
+        this.setLocation(parent.getX()+(parent.getWidth()-this.getWidth())/2, 
+                parent.getY()+(parent.getHeight()-this.getHeight())/2);
         this.setVisible(true);
     }
 

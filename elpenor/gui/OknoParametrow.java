@@ -8,7 +8,6 @@
  *
  * Created on 2011-11-18, 17:04:46
  */
-
 package elpenor.gui;
 
 import elpenor.szkielet.Kodek;
@@ -31,17 +30,21 @@ public class OknoParametrow extends javax.swing.JDialog {
     JLabel nazwaParametru[] = new JLabel[5];
     JSpinner wartośćParametru[] = new JSpinner[5];
     Map<String, Integer> mapa;
-
     int początkoweWartości[] = new int[5];
+
     /** Creates new form OknoParametrow */
-    public OknoParametrow(java.awt.Frame parent, boolean modal) {
+    public OknoParametrow(java.awt.Frame parent, boolean modal)
+    {
         super(parent, modal);
-        
-        initComponents();this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
+
+        initComponents();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         this.setAlwaysOnTop(true);
-        this.setLocation(50, 50);
         
+        this.setLocation(parent.getX() + (parent.getWidth() - this.getWidth()) / 2,
+                parent.getY() + (parent.getHeight() - this.getHeight()) / 2);
+
         this.przOk.setToolTipText("Zapisuje zmiany i wychodzi");
         this.przAnuluj.setToolTipText("Nie zapisuje zmian i wychodzi");
         this.przReset.setToolTipText("Przywraca wartości przed edycją");
@@ -81,26 +84,23 @@ public class OknoParametrow extends javax.swing.JDialog {
 
         this.nazwaKodeku.setText(kodek.nazwa());
 
-        for (final Parametr p : kodek.parametry())
-        {
+        for (final Parametr p : kodek.parametry()) {
             i++;
             final int j = i;
 
             Integer wartosc = mapa.get(p.nazwa());
 
-            if (wartosc == null)
-            {
+            if (wartosc == null) {
                 wartosc = p.domyslna();
 
             }
 
             nazwaParametru[j].setText(p.nazwa());
             wartośćParametru[j].setValue(wartosc);
-            
+
             początkoweWartości[j] = wartosc;
 
-            wartośćParametru[j].addFocusListener(new FocusListener()
-            {
+            wartośćParametru[j].addFocusListener(new FocusListener() {
 
                 public void focusGained(FocusEvent fe)
                 {
@@ -126,14 +126,6 @@ public class OknoParametrow extends javax.swing.JDialog {
     private void ustawOpis(String tekst)
     {
         this.infoParametru.setText("<HTML>" + tekst.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;"));
-    }
-    
-    public void ustawEdytowalnosc(boolean e)
-    {
-        for (JSpinner js:wartośćParametru)
-        {
-            if (js!= null) js.setEnabled(e);
-        }
     }
 
     /** This method is called from within the constructor to
@@ -384,8 +376,7 @@ public class OknoParametrow extends javax.swing.JDialog {
 
     private void przOkActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_przOkActionPerformed
     {//GEN-HEADEREND:event_przOkActionPerformed
-        for (int i = 1; i < 5; i++)
-        {
+        for (int i = 1; i < 5; i++) {
             mapa.put(nazwaParametru[i].getText(), (Integer) wartośćParametru[i].getValue());
         }
         this.dispose();
@@ -393,8 +384,7 @@ public class OknoParametrow extends javax.swing.JDialog {
 
     private void przAnulujActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_przAnulujActionPerformed
     {//GEN-HEADEREND:event_przAnulujActionPerformed
-        for (int i = 1; i < 5; i++)
-        {
+        for (int i = 1; i < 5; i++) {
             mapa.put(nazwaParametru[i].getText(), początkoweWartości[i]);
         }
         this.dispose();
@@ -402,22 +392,26 @@ public class OknoParametrow extends javax.swing.JDialog {
 
     private void przResetActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_przResetActionPerformed
     {//GEN-HEADEREND:event_przResetActionPerformed
-        for (int i = 1; i < 5; i++)
-        {
+        for (int i = 1; i < 5; i++) {
             wartośćParametru[i].setValue(początkoweWartości[i]);
             mapa.put(nazwaParametru[i].getText(), początkoweWartości[i]);
         }
 }//GEN-LAST:event_przResetActionPerformed
 
     /**
-    * @param args the command line arguments
-    */
-    public static void main(String args[]) {
+     * @param args the command line arguments
+     */
+    public static void main(String args[])
+    {
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+
+            public void run()
+            {
                 OknoParametrow dialog = new OknoParametrow(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
+
+                    public void windowClosing(java.awt.event.WindowEvent e)
+                    {
                         System.exit(0);
                     }
                 });
@@ -425,7 +419,6 @@ public class OknoParametrow extends javax.swing.JDialog {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel infoParametru;
     private javax.swing.JPanel lewyPanel;
@@ -448,5 +441,4 @@ public class OknoParametrow extends javax.swing.JDialog {
     private javax.swing.JSpinner wartośćParametru3;
     private javax.swing.JSpinner wartośćParametru4;
     // End of variables declaration//GEN-END:variables
-
 }

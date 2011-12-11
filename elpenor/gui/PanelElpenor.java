@@ -114,9 +114,4 @@ public class PanelElpenor extends JPanel
 
     }
 
-    /*@Override
-    public void repaint()
-    {
-    System.out.println("s" + nrPanelu);
-    }*/
 }

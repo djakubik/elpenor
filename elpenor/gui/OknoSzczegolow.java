@@ -17,8 +17,7 @@ import javax.swing.JTabbedPane;
  * Okno szczegółowych informacji o modułach użytych podczas kompresji
  * @author darian
  */
-public class OknoSzczegolow extends JDialog
-{
+public class OknoSzczegolow extends JDialog {
 
     private JTabbedPane tabPanel;
 
@@ -39,8 +38,8 @@ public class OknoSzczegolow extends JDialog
         Dimension rozmiar = tk.getScreenSize();
 
         //Na maksymalnie takiej powierzchni się wyświetli!
-        double xx = rozmiar.width * 0.6;
-        double yy = rozmiar.height * 0.6;
+        double xx = rozmiar.width * 0.5;
+        double yy = rozmiar.height * 0.5;
 
         //Proporcje jakie mają zostać zachowane / maks. rozmiar = stosunek wielk.
         int xpro = 900;
@@ -49,14 +48,12 @@ public class OknoSzczegolow extends JDialog
         double stosuneksz = xpro / (double) xx;
         double stosunekwy = ypro / (double) yy;
 
-        if (stosuneksz > stosunekwy)
-        {
+        if (stosuneksz > stosunekwy) {
             xpro = (int) (xpro / stosuneksz);
             ypro = (int) (ypro / stosuneksz);
             xx = (rozmiar.width - xx) / 2;
             yy = (rozmiar.height - ypro) / 2;
-        } else
-        {
+        } else {
             xpro = (int) (xpro / stosunekwy);
             ypro = (int) (ypro / stosunekwy);
             xx = (rozmiar.width - xpro) / 2;
@@ -69,16 +66,18 @@ public class OknoSzczegolow extends JDialog
         tabPanel = new JTabbedPane();
         tabPanel.setOpaque(false);
 
-        if (kodeki == null)
-        {
+        if (kodeki == null) {
             tabPanel.add(new PanelInfo("Brak modułów", null, "Coś nie tak"), "Moduł 0");
-        } else
-        {
-            for (Kodek k : kodeki)
-            {
-                tabPanel.add(new PanelInfo(k.nazwa(), null, k.opis()), "Moduł " + k.id());
+        } else {
+            if (kodeki.size() != 0) {
+                for (Kodek k : kodeki) {
+                    tabPanel.add(new PanelInfo(k.nazwa(), null, k.opis()), k.nazwa());
 
+                }
+            } else {
+                tabPanel.add(new PanelInfo("Brak modułów", null, "Lista modułów jest akyualnie pusta."), "/dev/null");
             }
+
         }
         getContentPane().add(tabPanel);
         setVisible(true);

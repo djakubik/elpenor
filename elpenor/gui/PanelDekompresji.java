@@ -38,14 +38,15 @@ public class PanelDekompresji extends PanelElpenor {
     private DaneSkompresowane ds;
     PrzyciskX wybierzPlik;
     PanelOPliku szczegolyPliku;
-    private ArrayList<Kodek> kodeki = new ArrayList<Kodek>();
+    private List<Kodek> kodeki = new ArrayList<Kodek>();
     private ArrayList<Map<String, Integer>> parametry = new ArrayList<Map<String, Integer>>();
 
     /**
      * Ustawia parametry początkowe, dodaje i pozycjonuje główne elementy okna oraz ustawia nasłuchiwacze zdarzeń
      * @param okno Wskaźnik na główne okno programu
      */
-    PanelDekompresji(final JFrame okno) {
+    PanelDekompresji(final JFrame okno)
+    {
 
         super(okno);
 
@@ -58,19 +59,17 @@ public class PanelDekompresji extends PanelElpenor {
 
         listaDostepnych = new ListaModulow("Użyte moduły");
 
-        panelInfo = new PanelInfo("Informacje o module", null, "informacje");
+        panelInfo = new PanelInfo("Informacje o module", null, "Tu będą wyświetlane informacje ogólne o module użytym w kompresji");
 
         JPanel panelPrzyciskow = new JPanel();
         panelPrzyciskow.setLayout(new GridBagLayout());
 
-        szczegolyModulow = new PrzyciskX("Szczegołowe informacje", "wyświetl_szczegółowe_informacje", "Otwiera okno z informacjami o każdym użytym module");
+        szczegolyModulow = new PrzyciskX("Szczegołowe informacje", "wyświetl_szczegółowe_informacje", "Otwiera okno ze szczegółowymi informacjami kompresji każdym modułem");
 
-        //PanelInfo szczegolyPliku = new PanelInfo("Informacje o pliku", null, "");
         szczegolyPliku = new PanelOPliku();
         szczegolyPliku.wyczyscDane();
-        
-        //szczegolyPliku.wyczyscDane();
-        
+
+
         /*
          * Pozycjonowanie górnego panelu
          */
@@ -91,15 +90,15 @@ public class PanelDekompresji extends PanelElpenor {
         gbc.gridx = 24;
         gbc.gridwidth = 10;
         gbc.gridheight = 2;
-        
+
         GridBagConstraints d = new GridBagConstraints();
         d = (GridBagConstraints) gbc.clone();
-        
+
         gbc.fill = gbc.NONE;
 
         gornyPanel.add(szczegolyPliku, gbc);
         gbc = d;
-        
+
         gbc.gridy = 1;
         gbc.gridx = 10;
         gbc.gridwidth = 14;
@@ -142,12 +141,7 @@ public class PanelDekompresji extends PanelElpenor {
 
         Kontener dLPanel = new Kontener(true);
 
-        
         dLPanel.dodaj(wybierzPlik, 2);
-        /*
-        dLPanel.dodaj(new JLabel("Wybierz motyw"), 1,gbc.CENTER);
-        dLPanel.dodaj(comboMotywow,1);*/
-
 
         /*
          * Pozycjonowanie dolnego panelu
@@ -169,7 +163,6 @@ public class PanelDekompresji extends PanelElpenor {
         dolnyPanel.dodaj(skontener, 1);
         dolnyPanel.dodaj(dkontener, 4);
 
-        //dolnyPanel.dodaj(dzialaj, 4,gbc.VERTICAL);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -192,7 +185,8 @@ public class PanelDekompresji extends PanelElpenor {
 
         listaDostepnych.lista.addListSelectionListener(new ListSelectionListener() {
 
-            public void valueChanged(ListSelectionEvent evt) {
+            public void valueChanged(ListSelectionEvent evt)
+            {
                 if (evt.getValueIsAdjusting() == false) {
                     int wybrany = listaDostepnych.lista.getSelectedIndex();
                     if (wybrany != -1) {
@@ -205,11 +199,12 @@ public class PanelDekompresji extends PanelElpenor {
 
         wybor1.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent ae) {
+            public void actionPerformed(ActionEvent ae)
+            {
 
                 JFileChooser ladowaczPlikow = new JFileChooser();
 
-                int r = ladowaczPlikow.showDialog(PanelDekompresji.this,"Wybierz");
+                int r = ladowaczPlikow.showDialog(PanelDekompresji.this, "Wybierz");
 
                 if (r == JFileChooser.APPROVE_OPTION) {
                     File s = ladowaczPlikow.getSelectedFile();
@@ -221,11 +216,12 @@ public class PanelDekompresji extends PanelElpenor {
 
         wybor2.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent ae) {
+            public void actionPerformed(ActionEvent ae)
+            {
 
                 JFileChooser zapisywaczPlikow = new JFileChooser();
 
-                int r = zapisywaczPlikow.showDialog(PanelDekompresji.this,"Wybierz");
+                int r = zapisywaczPlikow.showDialog(PanelDekompresji.this, "Wybierz");
 
                 if (r == JFileChooser.APPROVE_OPTION) {
                     File s = zapisywaczPlikow.getSelectedFile();
@@ -239,15 +235,18 @@ public class PanelDekompresji extends PanelElpenor {
 
         DocumentListener polePlikuAction = new DocumentListener() {
 
-            public void insertUpdate(DocumentEvent de) {
+            public void insertUpdate(DocumentEvent de)
+            {
                 aktualizujDzialaj();
             }
 
-            public void removeUpdate(DocumentEvent de) {
+            public void removeUpdate(DocumentEvent de)
+            {
                 aktualizujDzialaj();
             }
 
-            public void changedUpdate(DocumentEvent de) {
+            public void changedUpdate(DocumentEvent de)
+            {
                 aktualizujDzialaj();
             }
         };
@@ -258,7 +257,8 @@ public class PanelDekompresji extends PanelElpenor {
 
         dzialaj.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent ae) {
+            public void actionPerformed(ActionEvent ae)
+            {
 
                 if (ds != null) {
 
@@ -267,9 +267,9 @@ public class PanelDekompresji extends PanelElpenor {
                     System.out.println(path2);
                     try {
                         if (ds.dekompresuj(path2)) {
-                            System.out.println("Dekompresja wykonana pomyślnie.");
+                            new KomunikatKońcowy(okno, true, false, true);
                         } else {
-                            System.out.println("Dekompresja nieudana!");
+                            new KomunikatKońcowy(okno, true, false, false);
                         }
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(PanelDekompresji.class.getName()).log(Level.SEVERE, null, ex);
@@ -282,7 +282,8 @@ public class PanelDekompresji extends PanelElpenor {
 
         wybierzPlik.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent ae) {
+            public void actionPerformed(ActionEvent ae)
+            {
                 try {
                     ds = engine.wczytaj_dane_skompresowane(polePliku1.getText());
 
@@ -296,21 +297,24 @@ public class PanelDekompresji extends PanelElpenor {
 
                 if (ds != null) {
 
-                    List<Kodek> kodeki = ds.podajKodeki();
+                    kodeki = ds.podajKodeki();
 
                     ustawKodeki(kodeki, listaDostepnych);
-                    
+
                     int n = polePliku1.getText().lastIndexOf('/');
                     String nazwa = polePliku1.getText().substring(++n);
-                    szczegolyPliku.wstawDane(nazwa,ds.podajRozmiarWejsciowy(), ds.podajRozmiarWyjsciowy());
+                    szczegolyPliku.wstawDane(nazwa, ds.podajRozmiarWejsciowy(), ds.podajRozmiarWyjsciowy());
 
-                } else szczegolyPliku.wyczyscDane();
+                } else {
+                    szczegolyPliku.wyczyscDane();
+                }
             }
         });
 
         szczegolyModulow.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent ae) {
+            public void actionPerformed(ActionEvent ae)
+            {
                 OknoSzczegolow oknoS = new OknoSzczegolow(okno, kodeki);
             }
         });
@@ -319,9 +323,10 @@ public class PanelDekompresji extends PanelElpenor {
     }
 
     /**
-     * aktualizuje dostępność przycisku (de)kompresuj
+     * Aktualizuje dostępność przycisku (de)kompresuj
      */
-    private void aktualizujDzialaj() {
+    private void aktualizujDzialaj()
+    {
         wybierzPlik.setEnabled(!polePliku1.getText().isEmpty());
         dzialaj.setEnabled(ds != null && !polePliku2.getText().isEmpty());
     }
@@ -331,7 +336,8 @@ public class PanelDekompresji extends PanelElpenor {
      * @param kodeki kolekcja kodeków do wrzucenia na listę
      * @param lista lista, która ma być uzupełniona
      */
-    private void ustawKodeki(Collection<Kodek> kodeki, ListaModulow lista) {
+    private void ustawKodeki(Collection<Kodek> kodeki, ListaModulow lista)
+    {
         for (Kodek kodek : kodeki) {
             kodek.id();
             lista.dodajModul(kodek);
@@ -339,7 +345,12 @@ public class PanelDekompresji extends PanelElpenor {
         }
     }
 
-    private void wyczyscKodeki(ListaModulow lista) {
+    /**
+     * Czyści listę kodeków użytych do kompresji
+     * @param lista lista, która ma być wyczyszczona
+     */
+    private void wyczyscKodeki(ListaModulow lista)
+    {
         lista.usunWszystkieModuly();
     }
 }

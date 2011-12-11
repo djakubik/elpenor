@@ -16,8 +16,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,21 +31,18 @@ import javax.swing.event.ListSelectionListener;
  * Panel, który buduje interfejs i umożliwia zainicjowanie kompresji
  * @author Darian Jakubik
  */
-public class PanelKompresji extends PanelElpenor
-{
+public class PanelKompresji extends PanelElpenor {
 
     private final PrzyciskO przyciskWLewo;
     private final PrzyciskO przyciskWPrawo;
     private final PrzyciskO przyciskWDol;
     private final PrzyciskO przyciskWGore;
-
     private ListaModulow listaWybranych;
-
     /**
      * Lista map zawierających parametry do kompresji
      */
     private ArrayList<Map<String, Integer>> mapy = new ArrayList<Map<String, Integer>>();
-    
+
     /**
      * Ustawia parametry początkowe, dodaje i pozycjonuje główne elementy okna oraz ustawia nasłuchiwacze zdarzeń
      * @param okno Wskaźnik na główne okno programu
@@ -254,23 +249,19 @@ public class PanelKompresji extends PanelElpenor
          * Obsługa zdarzeń
          */
 
-        listaWybranych.lista.addListSelectionListener(new ListSelectionListener()
-        {
+        listaWybranych.lista.addListSelectionListener(new ListSelectionListener() {
 
             public void valueChanged(ListSelectionEvent evt)
             {
-                if (evt.getValueIsAdjusting() == false)
-                {
+                if (evt.getValueIsAdjusting() == false) {
 
                     int wybrany = listaWybranych.lista.getSelectedIndex();
-                    if (wybrany == -1)
-                    {
+                    if (wybrany == -1) {
                         przyciskWLewo.setEnabled(false);
                         przyciskWGore.setEnabled(false);
                         przyciskWDol.setEnabled(false);
 
-                    } else
-                    {
+                    } else {
 
                         int iloscModulow = listaWybranych.lista.getModel().getSize() - 1;
                         Kodek m = listaWybranych.listaModulow.get(wybrany);
@@ -286,20 +277,16 @@ public class PanelKompresji extends PanelElpenor
             }
         });
 
-        listaDostepnych.lista.addListSelectionListener(new ListSelectionListener()
-        {
+        listaDostepnych.lista.addListSelectionListener(new ListSelectionListener() {
 
             public void valueChanged(ListSelectionEvent evt)
             {
-                if (evt.getValueIsAdjusting() == false)
-                {
+                if (evt.getValueIsAdjusting() == false) {
                     int wybrany = listaDostepnych.lista.getSelectedIndex();
-                    if (wybrany == -1)
-                    {
+                    if (wybrany == -1) {
                         przyciskWPrawo.setEnabled(false);
 
-                    } else
-                    {
+                    } else {
                         przyciskWPrawo.setEnabled(true);
 
                         panelInfo.ustawInfo(listaDostepnych.listaModulow.get(wybrany).opis());
@@ -309,26 +296,21 @@ public class PanelKompresji extends PanelElpenor
             }
         });
 
-        przyciskWLewo.addActionListener(new ActionListener()
-        {
+        przyciskWLewo.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae)
             {
                 int numer = listaWybranych.lista.getSelectedIndex();
-                if (numer >= 0)
-                {
+                if (numer >= 0) {
                     listaWybranych.usunModul(numer);
                     mapy.remove(numer);
 
                     int wszystkie = listaWybranych.lista.getModel().getSize();
-                    if (wszystkie > 0)
-                    {
-                        if (numer == wszystkie)
-                        {
+                    if (wszystkie > 0) {
+                        if (numer == wszystkie) {
                             listaWybranych.lista.setSelectedIndex(numer - 1);
 
-                        } else
-                        {
+                        } else {
                             listaWybranych.lista.setSelectedIndex(numer);
 
                         }
@@ -339,14 +321,12 @@ public class PanelKompresji extends PanelElpenor
             }
         });
 
-        przyciskWPrawo.addActionListener(new ActionListener()
-        {
+        przyciskWPrawo.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae)
             {
                 int numer = listaDostepnych.lista.getSelectedIndex();
-                if (numer >= 0)
-                {
+                if (numer >= 0) {
                     listaWybranych.dodajModul(listaDostepnych.listaModulow.get(numer));
                     listaWybranych.lista.setSelectedIndex(listaWybranych.lista.getModel().getSize() - 1);
                     mapy.add(new TreeMap<String, Integer>());
@@ -357,8 +337,7 @@ public class PanelKompresji extends PanelElpenor
             }
         });
 
-        przyciskWGore.addActionListener(new ActionListener()
-        {
+        przyciskWGore.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae)
             {
@@ -369,8 +348,7 @@ public class PanelKompresji extends PanelElpenor
             }
         });
 
-        przyciskWDol.addActionListener(new ActionListener()
-        {
+        przyciskWDol.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae)
             {
@@ -381,8 +359,7 @@ public class PanelKompresji extends PanelElpenor
             }
         });
 
-        wybor1.addActionListener(new ActionListener()
-        {
+        wybor1.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae)
             {
@@ -391,8 +368,7 @@ public class PanelKompresji extends PanelElpenor
 
                 int r = ladowaczPlikow.showOpenDialog(PanelKompresji.this);
 
-                if (r == JFileChooser.APPROVE_OPTION)
-                {
+                if (r == JFileChooser.APPROVE_OPTION) {
                     File s = ladowaczPlikow.getSelectedFile();
                     s.getPath();
                     polePliku1.setText(s.getPath());
@@ -400,8 +376,7 @@ public class PanelKompresji extends PanelElpenor
             }
         });
 
-        wybor2.addActionListener(new ActionListener()
-        {
+        wybor2.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae)
             {
@@ -410,8 +385,7 @@ public class PanelKompresji extends PanelElpenor
 
                 int r = zapisywaczPlikow.showSaveDialog(PanelKompresji.this);
 
-                if (r == JFileChooser.APPROVE_OPTION)
-                {
+                if (r == JFileChooser.APPROVE_OPTION) {
                     File s = zapisywaczPlikow.getSelectedFile();
                     s.getPath();
                     polePliku2.setText(s.getPath());
@@ -421,8 +395,7 @@ public class PanelKompresji extends PanelElpenor
 
 
 
-        DocumentListener polePlikuAction = new DocumentListener()
-        {
+        DocumentListener polePlikuAction = new DocumentListener() {
 
             public void insertUpdate(DocumentEvent de)
             {
@@ -444,8 +417,7 @@ public class PanelKompresji extends PanelElpenor
         polePliku2.getDocument().addDocumentListener(polePlikuAction);
 
 
-        dzialaj.addActionListener(new ActionListener()
-        {
+        dzialaj.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae)
             {
@@ -453,18 +425,14 @@ public class PanelKompresji extends PanelElpenor
                 Collection<KodekSparametryzowany> doKompresji = new Vector<KodekSparametryzowany>();
                 int iloscModulow = listaWybranych.listaModulow.size();
 
-                for (int nrModulu = 0; nrModulu < iloscModulow; nrModulu++)
-                {
+                for (int nrModulu = 0; nrModulu < iloscModulow; nrModulu++) {
                     Kodek szukany = listaWybranych.listaModulow.get(nrModulu);
                     String nazwaModulu = szukany.nazwa();
 
-                    for (Kodek kodek : kodeki)
-                    {
-                        if (kodek.nazwa().equals(nazwaModulu))
-                        {
+                    for (Kodek kodek : kodeki) {
+                        if (kodek.nazwa().equals(nazwaModulu)) {
 
                             doKompresji.add(new KodekSparametryzowany(kodek, mapy.get(nrModulu)));
-                            System.out.println("Znaleziono:(" + nrModulu + "): " + nazwaModulu);
 
                             break;
                         }
@@ -472,14 +440,10 @@ public class PanelKompresji extends PanelElpenor
                     ;
                 }
 
-                System.out.println("Znalezionych modulow: " + doKompresji.size());
-                if (doKompresji.isEmpty())
-                {
+                if (doKompresji.isEmpty()) {
                     System.err.println("Wybierz poprawnie moduły!");
-                } else
-                {
-                    try
-                    {
+                } else {
+                    try {
 
                         String path1 = polePliku1.getText();
                         String path2 = polePliku2.getText();
@@ -487,15 +451,12 @@ public class PanelKompresji extends PanelElpenor
                         System.out.println(path1);
                         System.out.println(path2);
 
-                        if (engine.kompresuj(path1, path2, doKompresji))
-                        {
-                            System.out.println("Kompresja wykonana pomyślnie.");
-                        } else
-                        {
-                            System.out.println("Kompresja nieudana!");
+                        if (engine.kompresuj(path1, path2, doKompresji)) {
+                            new KomunikatKońcowy(okno, true, true, true);
+                        } else {
+                            new KomunikatKońcowy(okno, true, true, false);
                         }
-                    } catch (IOException exc)
-                    {
+                    } catch (IOException exc) {
                         // TODO Auto-generated catch block
                         exc.printStackTrace();
                     }
@@ -504,8 +465,7 @@ public class PanelKompresji extends PanelElpenor
             }
         });
 
-        szczegolyModulow.addActionListener(new ActionListener()
-        {
+        szczegolyModulow.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae)
             {
@@ -513,17 +473,15 @@ public class PanelKompresji extends PanelElpenor
             }
         });
 
-        panelInfo.podajPrzycisk().addActionListener(new ActionListener()
-        {
+        panelInfo.podajPrzycisk().addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae)
             {
                 int wybrany = listaWybranych.lista.getSelectedIndex();
-                if (wybrany >=0)
-                {
+                if (wybrany >= 0) {
                     //new OknoParametrow(okno, listaWybranych.listaModulow.get(wybrany), mapy.get(wybrany));
-                    
-                    OknoParametrow ok = new OknoParametrow(okno,true);
+
+                    OknoParametrow ok = new OknoParametrow(okno, true);
                     ok.ustawienia(listaWybranych.listaModulow.get(wybrany), mapy.get(wybrany));
                 }
             }
@@ -545,8 +503,7 @@ public class PanelKompresji extends PanelElpenor
      */
     private void ustawKodeki(Collection<Kodek> kodeki, ListaModulow lista)
     {
-        for (Kodek kodek : kodeki)
-        {
+        for (Kodek kodek : kodeki) {
             kodek.id();
             lista.dodajModul(kodek);
 
