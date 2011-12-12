@@ -232,6 +232,9 @@
                 <Property name="toolTipText" type="java.lang.String" value=""/>
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="warto&#x15b;&#x107;Parametru1FocusGained"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

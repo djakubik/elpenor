@@ -31,6 +31,8 @@ public class OknoParametrow extends javax.swing.JDialog {
     JSpinner wartośćParametru[] = new JSpinner[5];
     Map<String, Integer> mapa;
     int początkoweWartości[] = new int[5];
+    int wMin[] = new int[5];
+    int wMax[] = new int[5];
 
     /** Creates new form OknoParametrow */
     public OknoParametrow(java.awt.Frame parent, boolean modal)
@@ -41,7 +43,7 @@ public class OknoParametrow extends javax.swing.JDialog {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         this.setAlwaysOnTop(true);
-        
+
         this.setLocation(parent.getX() + (parent.getWidth() - this.getWidth()) / 2,
                 parent.getY() + (parent.getHeight() - this.getHeight()) / 2);
 
@@ -97,6 +99,8 @@ public class OknoParametrow extends javax.swing.JDialog {
 
             nazwaParametru[j].setText(p.nazwa());
             wartośćParametru[j].setValue(wartosc);
+            wMin[j] = p.min();
+            wMax[j] = p.max();
 
             początkoweWartości[j] = wartosc;
 
@@ -104,17 +108,19 @@ public class OknoParametrow extends javax.swing.JDialog {
 
                 public void focusGained(FocusEvent fe)
                 {
-                    ustawOpis(p.opis());
+                    ustawOpis(p.opis(),p.min(),p.max());
                 }
 
                 public void focusLost(FocusEvent fe)
                 {
                     mapa.put(p.nazwa(), (Integer) wartośćParametru[j].getValue());
+                    Integer integer = (Integer) wartośćParametru[j].getValue();
+                    integer = (integer >= wMin[j]) ? ((integer <= wMax[j]) ? integer : wMax[j]) : wMin[j];
 
                 }
             });
 
-            ustawOpis(p.opis());
+            ustawOpis(p.opis(),p.min(),p.max());
 
             panelParametru[j].setVisible(true);
 
@@ -122,10 +128,12 @@ public class OknoParametrow extends javax.swing.JDialog {
 
         setVisible(true);
     }
-
-    private void ustawOpis(String tekst)
+    
+    private void ustawOpis(String tekst,int min, int max)
     {
-        this.infoParametru.setText("<HTML>" + tekst.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;"));
+        this.infoParametru.setText("<HTML>" + tekst.replace("&", "&amp;").
+                replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
+                +"\nMin: "+min+" , Max: "+max);
     }
 
     /** This method is called from within the constructor to
@@ -223,6 +231,11 @@ public class OknoParametrow extends javax.swing.JDialog {
 
         wartośćParametru1.setToolTipText("");
         wartośćParametru1.setFocusable(false);
+        wartośćParametru1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                wartośćParametru1FocusGained(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelParametru1Layout = new javax.swing.GroupLayout(panelParametru1);
         panelParametru1.setLayout(panelParametru1Layout);
@@ -377,7 +390,10 @@ public class OknoParametrow extends javax.swing.JDialog {
     private void przOkActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_przOkActionPerformed
     {//GEN-HEADEREND:event_przOkActionPerformed
         for (int i = 1; i < 5; i++) {
-            mapa.put(nazwaParametru[i].getText(), (Integer) wartośćParametru[i].getValue());
+            Integer integer = (Integer) wartośćParametru[i].getValue();
+            integer = (integer >= wMin[i]) ? ((integer <= wMax[i]) ? integer : wMax[i]) : wMin[i];
+
+            mapa.put(nazwaParametru[i].getText(), integer);
         }
         this.dispose();
 }//GEN-LAST:event_przOkActionPerformed
@@ -397,6 +413,10 @@ public class OknoParametrow extends javax.swing.JDialog {
             mapa.put(nazwaParametru[i].getText(), początkoweWartości[i]);
         }
 }//GEN-LAST:event_przResetActionPerformed
+
+    private void wartośćParametru1FocusGained(java.awt.event.FocusEvent evt)//GEN-FIRST:event_wartośćParametru1FocusGained
+    {//GEN-HEADEREND:event_wartośćParametru1FocusGained
+    }//GEN-LAST:event_wartośćParametru1FocusGained
 
     /**
      * @param args the command line arguments

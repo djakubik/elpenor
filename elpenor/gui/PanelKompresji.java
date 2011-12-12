@@ -63,7 +63,7 @@ public class PanelKompresji extends PanelElpenor {
 
         listaWybranych = new ListaModulow("Wykorzystane moduły");
 
-        String napisPanelInfo = "Wstępne informacje, które mają być wyświetlone na ekranie. Tylko należy sporo napisać, żeby zobaczyć jak wszystkie informacje są formatowane";
+        String napisPanelInfo = "Ogólne informacje o modułach, które będą wyświetlone po wybraniu.";
         panelInfo = new PanelInfo("Informacje o module", new PrzyciskX("Konfiguruj", "konfiguruj_parametry", "Otwiera okno konfiguracyjne wybranego parametru"), napisPanelInfo);
 
 

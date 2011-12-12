@@ -29,7 +29,7 @@ public class Cezar extends Kodek
 
 	public String opis()
 	{
-		return "(to chyba oczywiste co ten moduł robi)";
+		return "W kryptografii jedna z najprostszych technik szyfrowania. Jest to rodzaj szyfru podstawieniowego, w którym każda litera tekstu jawnego (niezaszyfrowanego) zastępowana jest oddaloną od niej o stałą liczbę pozycji w alfabecie inną literą (szyfr monoalfabetyczny), przy czym kierunek zamiany musi być zachowany.";
 	}
 
 	private void zakoduj(Dane b, int k)

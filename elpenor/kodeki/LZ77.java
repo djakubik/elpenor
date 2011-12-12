@@ -13,10 +13,7 @@ import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.zip.DataFormatException;
 
 /**
  *
@@ -25,54 +22,60 @@ import java.util.zip.DataFormatException;
 public class LZ77 extends Kodek {
 
     private static final int ID = 5;
-    
     private int LZ77_SŁOWNIK = 2048;
     private int LZ77_WZORZEC = 16;
     private int LZ77_KRYTERIUM = 1;
-    
-    private String[] raporty = new String[1000];
-    private int tString = 0;
-    private double[] pojemności = new double[1000];
-    private int tInt = 0;
-    
+
     @Override
-    public String nazwa() {
+    public String nazwa()
+    {
         return "LZ77";
     }
 
     @Override
-    public String opis() {
-        return "Opis będzie.. wkrótce";
+    public String opis()
+    {
+        return "Lempel-Ziv 77 – jest metodą strumieniowej słownikowej "
+                + "kompresji danych. Metoda LZ77 wykorzystuje fakt, że w "
+                + "danych powtarzają się ciągi bajtów (np. w tekstach "
+                + "naturalnych będą to słowa, frazy lub całe zdania) – "
+                + "kompresja polega na zastępowaniu powtórzonych ciągów o "
+                + "wiele krótszymi liczbami wskazującymi, kiedy wcześniej "
+                + "wystąpił ciąg i z ilu bajtów się składał; z punktu widzenia"
+                + " człowieka jest to informacja postaci \"taki sam ciąg o "
+                + "długości 15 znaków wystąpił 213 znaków wcześniej\".";
     }
 
     @Override
-    public int id() {
+    public int id()
+    {
         return ID;
     }
-    
+
     @Override
-    public Dane zakoduj(Dane b, Map<String, Integer> par) {
+    public Dane zakoduj(Dane b, Map<String, Integer> par)
+    {
 
         byte[] wej = b.bufor();
         Metadane metadane = b.meta();
         Integer dp;
-        
-        
+
+
         dp = par.get("Słownik");
         LZ77_SŁOWNIK = (dp == null) ? 12 : dp;
         metadane.dodajWartosc(LZ77_SŁOWNIK);
-        LZ77_SŁOWNIK  = 1 << LZ77_SŁOWNIK;
-        
+        LZ77_SŁOWNIK = 1 << LZ77_SŁOWNIK;
+
         dp = par.get("Wzorzec");
         LZ77_WZORZEC = (dp == null) ? 5 : dp;
         metadane.dodajWartosc(LZ77_WZORZEC);
         LZ77_WZORZEC = 1 << LZ77_WZORZEC;
-        
+
         dp = par.get("Kryterium");
         LZ77_KRYTERIUM = (dp == null) ? 1 : dp;
         metadane.dodajWartosc(LZ77_KRYTERIUM);
-        
-        
+
+
         int wejPoz = 0;
         int iloscDanych = wej.length;
 
@@ -85,7 +88,7 @@ public class LZ77 extends Kodek {
         long czasA = 0;
         long tCzasA;
 
-        BitMaster bitMaster = new BitMaster(LZ77_SŁOWNIK, LZ77_WZORZEC, (int)(1.8*iloscDanych));
+        BitMaster bitMaster = new BitMaster(LZ77_SŁOWNIK, LZ77_WZORZEC, (int) (1.8 * iloscDanych));
         Duet duet;
 
         ByteBuffer słownik = ByteBuffer.allocateDirect(LZ77_SŁOWNIK);
@@ -94,14 +97,14 @@ public class LZ77 extends Kodek {
 
         wejPoz = pobierzDaneDoWzorca(wzorzec, wej, wejPoz, LZ77_WZORZEC);
 
-        
+
         int iloscWszystkich = iloscDanych;
-        
-        
+
+
         bitMaster.zapiszInt(iloscDanych);
 
         while (iloscDanych > 0) {
-            
+
             tCzasA = System.nanoTime();
 
             duet = wyszukajWzorzec(słownik, wzorzec);
@@ -110,7 +113,7 @@ public class LZ77 extends Kodek {
 
                 bitMaster.ustawBit();
                 bitMaster.zapiszDuet(duet);
-                
+
                 przepiszDoSłownika(słownik, wzorzec, duet.długość);
 
                 wejPoz = pobierzDaneDoWzorca(wzorzec, wej, wejPoz, duet.długość);
@@ -136,45 +139,46 @@ public class LZ77 extends Kodek {
             iloscDanych -= duet.długość;
             wejPoz = pobierzDaneDoWzorca(wzorzec, wej, wejPoz, 1);
 
-            czasA += (System.nanoTime() - tCzasA)/1000;
-            
-            if (czasA>czas)
-            {
+            czasA += (System.nanoTime() - tCzasA) / 1000;
+
+            if (czasA > czas) {
                 czas += 10000000;
-                System.out.println("Czas pracy: "+ czasA/1000000 + " s , Pozostało: "+ (double)iloscDanych/iloscWszystkich*100+ " % danych");
+                System.out.println("Czas pracy: " + czasA / 1000000 + " s , Pozostało: " + (double) iloscDanych / iloscWszystkich * 100 + " % danych");
             }
 
         }
 
         assert iloscDanych == 0;
         iloscDanych = wej.length;
-        
+
         wej = bitMaster.zakończ();
 
         Dane dane = new Dane(wej, 0, wej.length);
         dane.dodajMeta(metadane);
-        
+
         System.out.println("Parametry: S=" + LZ77_SŁOWNIK + " ,W=" + LZ77_WZORZEC + " ,K=" + LZ77_KRYTERIUM);
-        System.out.println("Raport: A=" + iloscA + " ,B=" + iloscB);
-        System.out.println("Raport: bA=" + (9 + log2(LZ77_SŁOWNIK) + log2(LZ77_WZORZEC)) + " ,bB=9");
-        System.out.println("Raport: mA=" + iloscA * (9 + log2(LZ77_SŁOWNIK) + log2(LZ77_WZORZEC)) / 8 + " ,mB=" + (double) iloscB * 9 / 8);
-        System.out.println("Raport: AB=" + Math.ceil((iloscA * (9 + log2(LZ77_SŁOWNIK) + log2(LZ77_WZORZEC)) + (double) iloscB * 9) / 8) + "  (" + (iloscA * (9 + log2(LZ77_SŁOWNIK) + log2(LZ77_WZORZEC)) + (double) iloscB * 9) / 8 + ")");
-        System.out.println("Raport: P=" + iloscDanych);
-        System.out.println("Raport: SK=" + Math.ceil((iloscA * (9 + log2(LZ77_SŁOWNIK) + log2(LZ77_WZORZEC)) + iloscB * 9) / 8) / iloscDanych * 100 + " %");
+        System.out.println("Raport ilości: A=" + iloscA + " ,B=" + iloscB);
+        //System.out.println("Raport: bA=" + (9 + log2(LZ77_SŁOWNIK) + log2(LZ77_WZORZEC)) + " ,bB=9");
+        //System.out.println("Raport: mA=" + iloscA * (9 + log2(LZ77_SŁOWNIK) + log2(LZ77_WZORZEC)) / 8 + " ,mB=" + (double) iloscB * 9 / 8);
+        System.out.println("Przed kompresją  =" + iloscDanych);
+        System.out.println("Po kompresji     =" + Math.ceil((iloscA * (9 + 1 << (LZ77_SŁOWNIK) + 1 << (LZ77_WZORZEC)) + (double) iloscB * 9) / 8) + " (" + (iloscA * (9 + 1 << (LZ77_SŁOWNIK) + 1 << (LZ77_WZORZEC)) + (double) iloscB * 9) / 8 + ")");
+        System.out.println("Stopień kompresji=" + Math.ceil((iloscA * (9 + 1 << (LZ77_SŁOWNIK) + 1 << (LZ77_WZORZEC)) + iloscB * 9) / 8) / iloscDanych * 100 + " %");
         //System.out.println("Raport: TA=" + czasA + " ,TB=" + czasB + " ,TC=" + czasC + " ,TD=" + czasD + " ,T=" + czas);
-        System.out.println("Raport: T=" + czasA);
-        
+        System.out.println("Czas pracy       =" + czasA / 1000000 + " s");
+        System.out.println();
+
         return dane;
 
     }
 
     @Override
-    public Dane odkoduj(Dane b, PrintWriter pw) {
+    public Dane odkoduj(Dane b, PrintWriter pw)
+    {
 
         LZ77_SŁOWNIK = 1 << b.meta().pobierz_wartosc();
         LZ77_WZORZEC = 1 << b.meta().pobierz_wartosc();
         LZ77_KRYTERIUM = b.meta().pobierz_wartosc();
-        
+
         long tCzasA = System.nanoTime();
 
         BitMaster bitMaster = new BitMaster(LZ77_SŁOWNIK, LZ77_WZORZEC, b.bufor().length);
@@ -205,19 +209,8 @@ public class LZ77 extends Kodek {
                 i += tDuet.długość;
 
                 if (i < iloscDanych) {
-                    
-//                    System.out.print("(" + i + ")" + tDuet.offset + " - ");
-//                    System.out.print(tDuet.długość + "| ");
-//                    System.out.println(tInt);
 
                     byte[] zeSłownika = pobierzZeSłownika(słownik, tDuet);
-
-//                    System.out.print("D1: ");
-//                    for(int t = 0; t <zeSłownika.length; t++)
-//                    {
-//                        System.out.print(zeSłownika[t]+".");
-//                    }
-//                    System.out.println(" | "+tInt);
 
                     wyj.put(zeSłownika);
                     wyj.put(tInt);
@@ -227,12 +220,6 @@ public class LZ77 extends Kodek {
                     tDuet.długość -= i - iloscDanych;
                     byte[] zeSłownika = pobierzZeSłownika(słownik, tDuet);
 
-//                    System.out.print("D2: ");
-//                    for(int t = 0; t <zeSłownika.length; t++)
-//                    {
-//                        System.out.print(zeSłownika[t]+".");
-//                    }
-
                     wyj.put(zeSłownika);
                 }
 
@@ -241,27 +228,18 @@ public class LZ77 extends Kodek {
                 byte tInt = (byte) bitMaster.odczytajBajt();
 
                 wyj.put(tInt);
-                
-//                System.out.println("W: "+tInt);
 
                 wrzućDoSłownika(słownik, tInt);
-//                System.out.print("(" + i + ")");
-//                System.out.println(tInt);
 
             }
-            //bitMaster.wypiszZawartość();
-            //bitMaster.wypiszBajtowo();
-            if (i>iloscDanych*procent/100) 
-            {
-                System.out.println("Data decoded: "+procent+"%");
+            if (i > iloscDanych * procent / 100) {
+                System.out.println("Data decoded: " + procent + "%");
                 procent += 10;
             }
         }
 
         tCzasA = System.nanoTime() - tCzasA;
-        String raport = "Czas Odkodowywania: " + tCzasA / 1000;
-        System.out.println(raport);
-        raporty[tString++] = raport;
+        System.out.println("Czas Odkodowywania: " + tCzasA / 1000000);
 
         wyj.rewind();
         byte[] ret = new byte[iloscDanych];
@@ -269,22 +247,24 @@ public class LZ77 extends Kodek {
 
         Dane dane = new Dane(ret, 0, iloscDanych);
         dane.dodajMeta(b.meta());
-        
+
         return dane;
     }
 
     @Override
-    public Collection<Parametr> parametry() {
-        
+    public Collection<Parametr> parametry()
+    {
+
         Collection<Parametr> kolekcjaParametrów = new ArrayList<Parametr>();
-        kolekcjaParametrów.add(new Kodek.Parametr("Słownik", "Określa w bitach długość słownika", 8, 16, 12));
-        kolekcjaParametrów.add(new Kodek.Parametr("Wzorzec", "Określa w bitach długość wzorca", 4, 8, 5));
-        kolekcjaParametrów.add(new Kodek.Parametr("Kryterium", "Określa minimalną długość podciągu słownika, który będzie zapisywany w formacie trójki danych", 0, 3, 1));
-      
+        kolekcjaParametrów.add(new Kodek.Parametr("Słownik", "Określa w bitach długość słownika. Słownik przechowuje 2^k ostatnio przetwarzanych symboli.", 8, 16, 12));
+        kolekcjaParametrów.add(new Kodek.Parametr("Wzorzec", "Określa w bitach długość wzorca. Wzorzec służy do przechowywania 2^n słów do zakodowania.", 4, 8, 5));
+        kolekcjaParametrów.add(new Kodek.Parametr("Kryterium", "Określa minimalną długość wzorca w podciągu słownika, który będzie zapisywany w formacie trójki danych.", 0, 3, 1));
+
         return kolekcjaParametrów;
     }
 
-    private Duet wyszukajWzorzec(ByteBuffer słownik, ByteBuffer wzorzec) {
+    private Duet wyszukajWzorzec(ByteBuffer słownik, ByteBuffer wzorzec)
+    {
 
         słownik.rewind();
         wzorzec.rewind();
@@ -321,7 +301,8 @@ public class LZ77 extends Kodek {
         return duet;
     }
 
-    private void przepiszDoSłownika(ByteBuffer słownik, ByteBuffer wzorzec, int ile) {
+    private void przepiszDoSłownika(ByteBuffer słownik, ByteBuffer wzorzec, int ile)
+    {
 
         byte[] doWzorca = new byte[LZ77_WZORZEC - ile];
         byte[] doSłownika = new byte[ile];
@@ -344,7 +325,8 @@ public class LZ77 extends Kodek {
         słownik.rewind();
     }
 
-    private byte[] pobierzZeSłownika(ByteBuffer słownik, Duet duet) {
+    private byte[] pobierzZeSłownika(ByteBuffer słownik, Duet duet)
+    {
 
         int ile = duet.długość;
         int pozycja = duet.offset;
@@ -366,7 +348,8 @@ public class LZ77 extends Kodek {
         return zeSłownika;
     }
 
-    private void wrzućDoSłownika(ByteBuffer słownik, byte bajt) {
+    private void wrzućDoSłownika(ByteBuffer słownik, byte bajt)
+    {
 
         byte[] starySłownik = new byte[LZ77_SŁOWNIK - 1];
         słownik.position(1);
@@ -379,7 +362,8 @@ public class LZ77 extends Kodek {
 
     }
 
-    private int pobierzDaneDoWzorca(ByteBuffer wzorzec, byte[] wej, int wejpoz, int długość) {
+    private int pobierzDaneDoWzorca(ByteBuffer wzorzec, byte[] wej, int wejpoz, int długość)
+    {
 
         wzorzec.position(LZ77_WZORZEC - długość);
 
@@ -393,7 +377,8 @@ public class LZ77 extends Kodek {
 
     }
 
-    private void wypiszBufor(ByteBuffer b) {
+    private void wypiszBufor(ByteBuffer b)
+    {
         System.out.print("WART: ");
         b.rewind();
         while (b.hasRemaining()) {
@@ -408,9 +393,4 @@ public class LZ77 extends Kodek {
         b.rewind();
         System.out.println("|");
     }
-
-    private static double log2(double x) {
-        return Math.log(x) / Math.log(2);
-    }
-    
 }
