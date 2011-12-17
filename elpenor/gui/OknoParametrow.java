@@ -15,6 +15,7 @@ import elpenor.szkielet.Kodek.Parametr;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Map;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -104,23 +105,25 @@ public class OknoParametrow extends javax.swing.JDialog {
 
             początkoweWartości[j] = wartosc;
 
-            wartośćParametru[j].addFocusListener(new FocusListener() {
+            JFormattedTextField jftf = (JFormattedTextField) wartośćParametru[j].getEditor().getComponent(0);
+
+
+            jftf.addFocusListener(new FocusListener() {
 
                 public void focusGained(FocusEvent fe)
                 {
-                    ustawOpis(p.opis(),p.min(),p.max());
+                    ustawOpis(p.opis(), p.min(), p.max());
                 }
 
                 public void focusLost(FocusEvent fe)
                 {
-                    mapa.put(p.nazwa(), (Integer) wartośćParametru[j].getValue());
                     Integer integer = (Integer) wartośćParametru[j].getValue();
                     integer = (integer >= wMin[j]) ? ((integer <= wMax[j]) ? integer : wMax[j]) : wMin[j];
+                    wartośćParametru[j].setValue(integer);
+                    mapa.put(p.nazwa(), integer);
 
                 }
             });
-
-            ustawOpis(p.opis(),p.min(),p.max());
 
             panelParametru[j].setVisible(true);
 
@@ -128,12 +131,12 @@ public class OknoParametrow extends javax.swing.JDialog {
 
         setVisible(true);
     }
-    
-    private void ustawOpis(String tekst,int min, int max)
+
+    private void ustawOpis(String tekst, int min, int max)
     {
         this.infoParametru.setText("<HTML>" + tekst.replace("&", "&amp;").
                 replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
-                +"\nMin: "+min+" , Max: "+max);
+                + "\nMin: " + min + " , Max: " + max);
     }
 
     /** This method is called from within the constructor to
