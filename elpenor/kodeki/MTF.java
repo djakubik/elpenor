@@ -20,7 +20,20 @@ public class MTF extends Kodek
 
 	public String opis()
 	{
-		return "Move To Front";
+		return "Move To Front – prosta transformacja strumienia danych,"
+                        + " używana jako część niektórych procesów kompresji, "
+                        + "której zastosowanie może spowodować zmniejszenie "
+                        + "entropii. Co za tym idzie, algorytmy kompresji "
+                        + "zależne od tej własności (kodowanie Shannona, "
+                        + "Shannona-Fano, Huffmana, arytmetyczne) dadzą lepsze "
+                        + "wyniki; może także wyprodukować sekwencje lepiej "
+                        + "kompresowane metodą RLE. To, czy zastosowanie MTF "
+                        + "rzeczywiście doprowadzi do zmniejszenia entropii, "
+                        + "zależy od danych – zmniejszenie entropii występuje, "
+                        + "gdy częstotliwości występowania symboli wykazują "
+                        + "lokalną spójność. Jak wspomniano, algorytm kodowania"
+                        + " i dekodowania jest bardzo prosty, dlatego jego "
+                        + "implementacje są bardzo efektywne.";
 	}
 
 	public String nazwa()

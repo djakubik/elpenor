@@ -25,7 +25,20 @@ public class GaderyPoluki extends Kodek
 
 	public String opis()
 	{
-		return "(to chyba oczywiste co ten moduł robi)";
+		return "Gaderypoluki – rodzaj prostego monoalfabetycznego "
+                        + "szyfru podstawieniowego stosowanego w harcerstwie "
+                        + "do szyfrowania krótkich wiadomości. Technicznie jest"
+                        + " to prosty, symetryczny, monoalfabetyczny szyfr "
+                        + "podstawieniowy, w którym szyfrowanie oparte jest na "
+                        + "krótkim, łatwym do zapamiętania kluczu. Klucz ten "
+                        + "zapisuje się w formie ciągu par liter, które ulegają"
+                        + " w tym szyfrze prostemu zastąpieniu. Najczęściej "
+                        + "stosowany klucz to \"GA-DE-RY-PO-LU-KI\", skąd "
+                        + "pochodzi nazwa szyfru. W kluczu tym każda para liter"
+                        + " oddzielonych myślnikiem stanowi listę zamienników. "
+                        + "Litery, których nie ma liście zamienników, pozostawia"
+                        + " się w szyfrowanym tekście bez zmian. Zmianom nie "
+                        + "podlegają też spacje.";
 	}
 
 	/*
