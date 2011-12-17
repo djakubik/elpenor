@@ -24,7 +24,18 @@ public class Huffman extends Kodek
 
 	public String opis()
 	{
-		return "(to chyba oczywiste co ten moduł robi)";
+		return "Kodowanie Huffmana - Jedna z najprostszych i łatwych "
+                        + "w implementacji metod kompresji bezstratnej. Została"
+                        + " opracowana w 1952 roku przez Amerykanina Davida "
+                        + "Huffmana. Algorytm Huffmana nie należy do "
+                        + "najefektywniejszych systemów bezstratnej kompresji "
+                        + "danych, dlatego też praktycznie nie używa się go "
+                        + "samodzielnie. Często wykorzystuje się go jako ostatni"
+                        + " etap w różnych systemach kompresji, zarówno "
+                        + "bezstratnej, jak i stratnej, np. MP3 lub JPEG. "
+                        + "Pomimo, że nie jest doskonały, stosuje się go ze "
+                        + "względu na prostotę oraz brak ograniczeń patentowych."
+                        + " Jest to przykład wykorzystania algorytmu zachłannego.";
 	}
 
 	public String nazwa()
